@@ -1,4 +1,3 @@
-# ----- build stage -----
 FROM node:20-alpine AS build
 WORKDIR /app
 
@@ -8,13 +7,18 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# ----- runtime stage -----
-FROM nginx:1.27-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+FROM node:20-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
 
-# SPA routing support
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/pages ./pages
+COPY --from=build /app/src ./src
+COPY --from=build /app/next-env.d.ts ./next-env.d.ts
+COPY --from=build /app/tsconfig.json ./tsconfig.json
+
+EXPOSE 4173
+CMD ["npm", "run", "start"]

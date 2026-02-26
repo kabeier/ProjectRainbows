@@ -3,12 +3,11 @@ services:
     build:
       context: .
       target: build
-    command: npm run dev
+    command: npm run dev -- -p 4173
     ports:
-      - "4173:8080"
+      - "4173:4173"
     volumes:
       - .:/app
       - /app/node_modules
     environment:
-      - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true

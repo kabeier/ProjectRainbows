@@ -3,4 +3,4 @@ services:
     image: projectsparks-web
     build: .
     ports:
-      - "8080:80"
+      - "4173:4173"
