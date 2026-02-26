@@ -1,6 +1,6 @@
 services:
   web:
-    image: projectsparks-web
+    image: projectrainbows-web
     build: .
     ports:
       - "4173:4173"
