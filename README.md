@@ -113,13 +113,13 @@ Open:
 Build the image:
 
 ```bash
-docker build -t projectsparks-web .
+docker build -t projectrainbows-web .
 ```
 
 Run it:
 
 ```bash
-docker run --rm -p 4173:4173 projectsparks-web
+docker run --rm -p 4173:4173 projectrainbows-web
 ```
 
 Open:
