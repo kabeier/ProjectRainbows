@@ -1,15 +1,18 @@
 FROM node:20-alpine AS build
 WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY package*.json ./
 RUN npm ci
 
 COPY . .
+# Next.js compiles with SWC by default when no Babel config is present
 RUN npm run build
 
 FROM node:20-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY package*.json ./
 RUN npm ci --omit=dev

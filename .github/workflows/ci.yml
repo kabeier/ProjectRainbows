@@ -22,10 +22,10 @@ jobs:
       - name: Install dependencies
         run: npm ci --include=dev
 
-      - name: Verify core framework dependencies
+      - name: Verify Next.js + SWC setup
         run: |
           node -e "const pkgs=['next','react','react-dom']; for (const pkg of pkgs){const path=require.resolve(pkg + '/package.json'); const version=require(path).version; console.log(pkg + '@' + version)}"
-          test -f node_modules/next/dist/bin/next
+          test ! -f .babelrc
 
       - name: Lockfile reproducibility check
         run: git diff --exit-code package-lock.json

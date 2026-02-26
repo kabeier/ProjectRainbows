@@ -35,3 +35,10 @@ docker-down:
 
 docker-e2e:
 	docker compose -f docker-compose.e2e.yml run --rm e2e
+
+ci:
+	npm ci
+	npm run typecheck
+	npm run lint
+	npm run test:run
+	npm run build
