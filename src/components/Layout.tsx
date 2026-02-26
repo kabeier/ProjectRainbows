@@ -1,32 +1,33 @@
-import { NavLink, Outlet } from "react-router-dom";
+import Link from "next/link";
 
-const linkStyle = ({ isActive }: { isActive: boolean }) => ({
+type LayoutProps = {
+  children: React.ReactNode;
+};
+
+const linkStyle = {
   marginRight: 12,
   textDecoration: "none",
-  fontWeight: isActive ? 700 : 400,
-});
+};
 
-export default function Layout() {
+export default function Layout({ children }: LayoutProps) {
   return (
     <div style={{ padding: 24, fontFamily: "system-ui, sans-serif" }}>
       <header style={{ marginBottom: 16 }}>
         <nav>
-          <NavLink to="/" end style={linkStyle}>
+          <Link href="/" style={linkStyle}>
             Home
-          </NavLink>
-          <NavLink to="/projects" style={linkStyle}>
+          </Link>
+          <Link href="/projects" style={linkStyle}>
             Projects
-          </NavLink>
-          <NavLink to="/about" style={linkStyle}>
+          </Link>
+          <Link href="/about" style={linkStyle}>
             About
-          </NavLink>
+          </Link>
         </nav>
         <hr style={{ marginTop: 12 }} />
       </header>
 
-      <main>
-        <Outlet />
-      </main>
+      <main>{children}</main>
     </div>
   );
 }
