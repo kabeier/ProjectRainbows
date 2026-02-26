@@ -24,7 +24,7 @@ jobs:
 
       - name: Verify dependency install and Next CLI
         run: |
-          npm ls next react react-dom
+          node -e "const pkgs=['next','react','react-dom']; for (const pkg of pkgs){const path=require.resolve(pkg + '/package.json'); const version=require(path).version; console.log(pkg + '@' + version)}"
           test -x node_modules/.bin/next
           node_modules/.bin/next --version
 
