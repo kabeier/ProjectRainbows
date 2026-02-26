@@ -9,7 +9,7 @@ const PROJECTS: Project[] = [
   {
     id: "starter",
     title: "Starter Template",
-    description: "This repo itself: Webpack + TS + Docker + CI + tests.",
+    description: "This repo itself: Next.js + SWC + TS + Docker + CI + tests.",
   },
 ];
 

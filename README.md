@@ -1,24 +1,25 @@
 # ProjectSparks
 
-TypeScript + React app built with Webpack.
+TypeScript + React application built with **Next.js (SWC compiler)**.
 
 ## Tech Stack
 
+- Next.js 15 (Pages Router)
 - React 18
 - TypeScript
-- Webpack 5
-- Babel (TS/React presets)
-- Docker + Docker Compose (dev + production-style builds)
+- SWC (Next.js built-in compiler/minifier; no Babel pipeline)
 - ESLint + Prettier
-- Vitest
+- Vitest + Testing Library
 - Playwright + start-server-and-test
-- Husky
+- Docker + Docker Compose
+- Husky + lint-staged
+- GitHub Actions CI
 
 ## Getting Started
 
 ### Requirements
 
-- Node (see `.nvmrc`)
+- Node.js 20+
 - npm
 
 ### Install
@@ -27,7 +28,7 @@ TypeScript + React app built with Webpack.
 npm ci
 ```
 
-### Run Dev Server
+### Run the Development Server
 
 ```bash
 npm run dev
@@ -35,7 +36,7 @@ npm run dev
 
 Open:
 
-- [http://localhost:5173](http://localhost:5173)
+- [http://localhost:3000](http://localhost:3000)
 
 ### Typecheck
 
@@ -69,40 +70,23 @@ npm run e2e:ci
 npm run build
 ```
 
-Output is written to dist/
+Next.js build output is written to `.next/`.
 
-### Preview Production Build Locally
+### Run Production Server Locally
 
 ```bash
-npm run preview
+npm run start
 ```
 
 Open:
 
-- [http://localhost:5173](http://localhost:5173)
-
-## Analyze bundle
-```bash
-npm run analyze
-```
+- [http://localhost:4173](http://localhost:4173)
 
 ## Docker
 
-### Production (Docker Compose)
+### Development (Docker Compose)
 
-Run the production nginx container (no dev server):
-
-```bash
-docker compose -f docker-compose.yml up --build
-```
-
-Open:
-
-- [http://localhost:5173](http://localhost:5173)
-
-### Dev (Docker Compose)
-
-This runs the webpack dev server inside a container and mounts your local source code into it.
+Runs `next dev` in a container with your local source mounted for live edits.
 
 ```bash
 docker compose up --build
@@ -110,13 +94,19 @@ docker compose up --build
 
 Open:
 
-- [http://localhost:5173](http://localhost:5173)
+- [http://localhost:4173](http://localhost:4173)
 
-Stop:
+### Production (Docker Compose)
+
+Builds and runs `next start` on port `4173`.
 
 ```bash
-docker compose down
+docker compose -f docker-compose.yml up --build
 ```
+
+Open:
+
+- [http://localhost:4173](http://localhost:4173)
 
 ### Production-style Container
 
@@ -129,57 +119,49 @@ docker build -t projectsparks-web .
 Run it:
 
 ```bash
-docker run --rm -p 8080:80 projectsparks-web
+docker run --rm -p 4173:4173 projectsparks-web
 ```
 
 Open:
 
-- [http://localhost:8080](http://localhost:8080)
+- [http://localhost:4173](http://localhost:4173)
 
-## Git Hooks (Husky)
+## CI
 
-This repo uses Husky + lint-staged to enforce formatting and linting on commit.
+GitHub Actions runs:
 
-- Prettier runs on staged files
-- ESLint runs on staged JS/TS files
+- `npm ci`
+- `npm run typecheck`
+- `npm run lint`
+- `npm run test:run`
+- `npm run build`
+- `npm run e2e:ci`
 
-If hooks don’t run after cloning, make sure you’ve installed dependencies:
-
-```bash
-npm ci
-```
+CI also verifies there is no project Babel configuration so Next.js compiles with SWC.
 
 ## Project Layout
 
-- `src/` — React + TypeScript application source
-- `public/` — HTML template and static assets
-- `dist/` — production build output (generated)
+- `pages/` — Next.js Pages Router routes
+- `src/` — shared React/TypeScript components, styles, and test setup
+- `.next/` — Next.js build output (generated)
 - `e2e/` — Playwright end-to-end tests
 
-- `webpack.config.cjs` — Webpack configuration (dev + prod)
+- `.github/workflows/ci.yml` — CI pipeline
+- `Dockerfile` — production Next.js container build
+- `docker-compose.yml` — production container config
+- `docker-compose.override.yml` — development container overrides
+- `docker-compose.e2e.yml` — Playwright tests inside Docker
+
 - `tsconfig.json` — TypeScript compiler settings
 - `vitest.config.ts` — Vitest configuration
 - `playwright.config.ts` — Playwright configuration
-
-- `Dockerfile` — multi-stage build (Node build → Nginx runtime)
-- `nginx.conf` — Nginx SPA routing config
-- `docker-compose.yml` — production-style container (Nginx runtime)
-- `docker-compose.override.yml` — dev overrides (bind mounts + dev server)
-- `docker-compose.e2e.yml` - Playwright end-to-end tests inside docker container
-
-- `.github/` — CI workflow + Dependabot configuration
 - `commitlint.config.cjs` — commit message lint rules
 - `CHANGELOG.md` — release notes / project history
-
 - `package.json` / `package-lock.json` — dependencies + scripts
-- `node_modules/` — installed dependencies (not committed)
-- `Makefile` - convenience shortcuts for common tasks 
+- `Makefile` — convenience shortcuts for common tasks
 
 ### Notes
 
-- `dist/` is generated output and should not be committed.
+- `.next/` is generated output and should not be committed.
+- This repo intentionally does **not** include a Babel config file, so Next.js uses SWC end-to-end.
 - `package-lock.json` must be generated by npm commands (`npm install` / `npm ci`) and never hand-edited.
-- CI validates lockfile reproducibility after install; any unintended lockfile changes should fail the build.
-- CI runs `npm ci`, `npm run typecheck`, and `npm run build` on every PR/push.
-- Git hooks are managed by Husky and installed automatically on `npm ci`.
-
