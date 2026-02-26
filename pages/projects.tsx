@@ -13,18 +13,18 @@ const PROJECTS: Project[] = [
   },
 ];
 
-export default function Projects() {
+export default function ProjectsPage() {
   return (
     <section>
       <h1>Projects</h1>
       <ul>
-        {PROJECTS.map((p) => (
-          <li key={p.id} style={{ marginBottom: 12 }}>
-            <strong>{p.title}</strong>
-            <div>{p.description}</div>
-            {p.href ? (
+        {PROJECTS.map((project) => (
+          <li key={project.id} style={{ marginBottom: 12 }}>
+            <strong>{project.title}</strong>
+            <div>{project.description}</div>
+            {project.href ? (
               <div>
-                <a href={p.href} target="_blank" rel="noreferrer">
+                <a href={project.href} target="_blank" rel="noreferrer">
                   Link
                 </a>
               </div>
