@@ -1,4 +1,4 @@
-# ProjectSparks
+# ProjectRainbows
 
 TypeScript + React application built with **Next.js (SWC compiler)**.
 
